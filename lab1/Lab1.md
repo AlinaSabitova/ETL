@@ -20,7 +20,7 @@
 
 Видим, что у нас открылся Pentaho:
 
-img width="800" height="600" alt="image" src="/lab1/images/Снимок%20экрана%202026-02-11%20225638.png" />
+<img width="800" height="600" alt="image" src="/lab1/images/Снимок%20экрана%202026-02-11%20225638.png" />
 
 ## Шаг 2. Импорт данных
 
