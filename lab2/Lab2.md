@@ -6,18 +6,18 @@
 
 Таблица заказов:
 
-<img width="1000" height="400" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200759.png" />
+<img width="1000" height="500" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200759.png" />
 
 Таблица клиентов:
 
-<img width="1000" height="400" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200817.png" />
+<img width="1000" height="500" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200817.png" />
 
 Таблица продуктов:
 
-<img width="1000" height="400" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200831.png" />
+<img width="1000" height="500" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200831.png" />
 
 Индексы и настройка кодировки:
 
-<img width="1000" height="600" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200852.png" />
+<img width="1000" height="700" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200852.png" />
 
-<img width="1000" height="500" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200928.png" />
+<img width="1000" height="800" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-21%20200928.png" />
