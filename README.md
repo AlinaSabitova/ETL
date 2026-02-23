@@ -11,3 +11,19 @@
 # Лабораторная №2
 
 [Отчет](/lab2/Lab2.md)
+
+[Анализ в Python](/lab2/lab2_etl.ipynb)
+
+Файлы трансформаций и JOB:
+
+[Orders]()
+
+[Customers]()
+
+[Products]()
+
+[Profit_report]()
+
+[Sales_analysis]()
+
+[JOB]()
