@@ -26,4 +26,4 @@
 
 [Sales_analysis]()
 
-[JOB]()
+[JOB](/lab2/Job%20CSV_to_MYsql.kjb)
