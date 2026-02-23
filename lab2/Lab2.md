@@ -136,13 +136,13 @@
 
 Создадим таблицу profit_report:
 
-<img width="600" height="300" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-23%20225759.png" />
+<img width="816" height="401" alt="image" src="https://github.com/user-attachments/assets/a10b215e-d1c1-40a1-a30a-48126bfbc805" />
 
 Выполним трансформацию:
 
 <img width="1000" height="800" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-23%20183841.png" />
 
-<img width="600" height="300" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-23%20225759.png" />
+<img width="1306" height="873" alt="image" src="https://github.com/user-attachments/assets/3c9c99fb-9805-4d83-ae03-e1fe1b0ca51f" />
 
 ## Анализ продаж
 
@@ -186,13 +186,13 @@
 
 Создадим таблицу sales_analysis:
 
-<img width="600" height="300" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-23%20225759.png" />
+<img width="888" height="519" alt="image" src="https://github.com/user-attachments/assets/83b6c56c-b2f3-44b1-8342-e2a9e0922ec1" />
 
 Выполним трансформацию:
 
 <img width="1000" height="800" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-23%20185437.png" />
 
-<img width="600" height="300" alt="image" src="/lab2/images/Снимок%20экрана%202026-02-23%20225759.png" />
+<img width="1598" height="896" alt="image" src="https://github.com/user-attachments/assets/5b4667e7-05cd-4fc4-9127-25c5df134e78" />
 
 ## Изменения в JOB
 
@@ -208,7 +208,7 @@
 
 ## Результаты анализа
 
-Отчет по прибыли:
+#### Отчет по прибыли:
 
 <img width="1990" height="1377" alt="image" src="https://github.com/user-attachments/assets/0a5a06e0-638b-4700-8a3c-9460d3675f80" />
 
@@ -219,7 +219,7 @@
 - Самая нерентабельная категория - мебель
 - Город, в котором филиал компании получает наибольшую прибыль, - Нью Йорк 
 
-Анализ продаж:
+#### Анализ продаж:
 
 <img width="2390" height="2357" alt="image" src="https://github.com/user-attachments/assets/36d51a12-4635-4378-bf67-36a8a8a73321" />
 
