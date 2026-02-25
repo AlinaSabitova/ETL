@@ -1,0 +1,244 @@
+equipment_id;breakdown_date;description;repair_cost;downtime_hours;repair_type;technician;breakdown_severity
+1;2023-01-13;Shaft misalignment;1503;6;Mechanical;Robert Brown;Low
+1;2023-02-17;Belt replacement;388;3;Mechanical;Christopher Anderson;Low
+1;2023-12-13;Lubrication required;124;2;Maintenance;John Smith;Low
+2;2023-06-24;Shaft misalignment;1136;6;Mechanical;Richard Miller;Low
+2;2023-10-29;Shaft misalignment;526;5;Mechanical;Matthew Thomas;Critical
+2;2024-01-02;Water damage;20856;42;Critical;David Wilson;Critical
+3;2023-02-19;PLC program error;1004;6;Software;James Davis;Low
+4;2023-10-02;Sensor calibration error;1196;4;Electrical;Mike Johnson;High
+4;2023-12-27;Wiring short circuit;393;6;Electrical;David Wilson;High
+4;2024-02-29;Water damage;23267;72;Critical;Richard Miller;Medium
+5;2023-03-25;Normal wear and tear;588;4;Maintenance;Daniel Taylor;Medium
+5;2023-11-22;PLC program error;633;4;Software;Richard Miller;Medium
+5;2023-12-10;Shaft misalignment;792;5;Mechanical;Charles Martinez;Medium
+5;2023-12-17;Software crash;493;1;Software;David Wilson;Low
+5;2024-03-13;Gear tooth fracture;2027;17;Mechanical;James Davis;Critical
+6;2023-03-15;Shaft misalignment;1071;6;Mechanical;Matthew Thomas;High
+6;2023-04-19;Water damage;19358;41;Critical;Daniel Taylor;Critical
+6;2023-07-25;Shaft misalignment;771;6;Mechanical;Christopher Anderson;High
+6;2024-01-18;Complete breakdown;9019;45;Critical;Joseph Garcia;High
+7;2023-03-12;Filter cleaning;176;1;Maintenance;John Smith;Low
+7;2023-03-20;Water damage;8242;66;Critical;Daniel Taylor;Critical
+8;2023-07-17;Firmware update required;810;2;Software;Charles Martinez;High
+8;2023-10-11;Motor failure;7072;7;Electrical;Daniel Taylor;High
+8;2024-01-29;Water damage;14146;23;Critical;James Davis;Critical
+9;2023-01-02;Shaft misalignment;2550;5;Mechanical;Charles Martinez;Low
+10;2023-06-02;Water damage;19635;54;Critical;David Wilson;Medium
+10;2023-07-11;Bearing wear;2809;15;Mechanical;Charles Martinez;Low
+10;2023-11-03;Software crash;350;1;Software;Mike Johnson;High
+10;2024-03-01;Hydraulic leak;1380;2;Mechanical;David Wilson;Low
+11;2023-09-06;Wiring short circuit;1857;5;Electrical;Robert Brown;Medium
+12;2023-04-19;Lubrication required;182;2;Maintenance;Joseph Garcia;High
+12;2023-08-13;Filter cleaning;165;1;Maintenance;David Wilson;Medium
+12;2023-10-09;Bearing wear;1685;11;Mechanical;Christopher Anderson;Critical
+13;2023-01-11;Complete breakdown;11075;22;Critical;Christopher Anderson;Medium
+14;2023-12-29;Water damage;4929;30;Critical;Mike Johnson;Low
+15;2023-02-06;Filter cleaning;110;2;Maintenance;Daniel Taylor;Critical
+15;2023-04-20;Lubrication required;147;2;Maintenance;David Wilson;Critical
+15;2023-07-01;Communication loss;1091;4;Software;Matthew Thomas;Low
+15;2024-02-18;Communication loss;639;1;Software;Mike Johnson;Critical
+16;2023-03-13;Communication loss;625;3;Software;Thomas Rodriguez;Medium
+16;2023-11-27;Sensor calibration error;262;4;Electrical;Matthew Thomas;High
+16;2024-02-14;Sensor calibration error;454;2;Electrical;David Wilson;Critical
+17;2023-02-08;Normal wear and tear;1027;2;Maintenance;John Smith;Low
+17;2023-02-17;Gear tooth fracture;2562;18;Mechanical;Thomas Rodriguez;Critical
+17;2023-04-20;Firmware update required;260;1;Software;Joseph Garcia;Low
+17;2023-07-19;Shaft misalignment;2363;7;Mechanical;Joseph Garcia;Critical
+18;2023-06-01;Belt replacement;209;3;Mechanical;Matthew Thomas;Low
+19;2023-01-30;Control board malfunction;3192;9;Electrical;Charles Martinez;Medium
+19;2023-01-30;Filter cleaning;70;1;Maintenance;Mike Johnson;Low
+19;2023-12-12;Gear tooth fracture;4507;8;Mechanical;Christopher Anderson;Medium
+20;2023-01-21;Fire damage;10372;77;Critical;Daniel Taylor;High
+20;2023-03-09;Structural failure;25151;58;Critical;Thomas Rodriguez;High
+20;2023-05-14;Belt replacement;471;1;Mechanical;James Davis;Critical
+21;2023-02-05;Gear tooth fracture;4227;14;Mechanical;Robert Brown;Critical
+21;2023-02-07;Motor failure;5254;23;Electrical;Christopher Anderson;Low
+21;2023-02-07;Lubrication required;189;2;Maintenance;Robert Brown;High
+21;2023-12-06;Sensor calibration error;1161;2;Electrical;James Davis;Low
+21;2024-03-02;Lubrication required;234;1;Maintenance;Daniel Taylor;High
+22;2023-01-23;Motor failure;4232;8;Electrical;Daniel Taylor;High
+22;2023-05-09;Control board malfunction;1178;12;Electrical;Joseph Garcia;High
+22;2024-01-03;Software crash;204;2;Software;Charles Martinez;Critical
+22;2024-01-16;Lubrication required;159;2;Maintenance;James Davis;Medium
+23;2023-08-15;Lubrication required;298;1;Maintenance;Mike Johnson;Low
+24;2023-07-03;Belt replacement;405;3;Mechanical;Mike Johnson;High
+24;2023-08-09;Power supply issue;571;4;Electrical;Richard Miller;Low
+24;2023-12-20;Power supply issue;2634;2;Electrical;Richard Miller;Medium
+24;2024-02-04;Lubrication required;288;1;Maintenance;David Wilson;Medium
+24;2024-02-14;Bearing wear;2288;3;Mechanical;Robert Brown;High
+25;2023-01-13;Structural failure;10328;71;Critical;Richard Miller;High
+25;2023-04-13;Normal wear and tear;558;4;Maintenance;David Wilson;Medium
+25;2023-07-30;Structural failure;32313;51;Critical;James Davis;Medium
+25;2024-02-08;Sensor calibration error;591;1;Electrical;Thomas Rodriguez;Medium
+26;2023-01-15;Sensor calibration error;1098;3;Electrical;Robert Brown;High
+26;2023-01-20;Sensor calibration error;810;4;Electrical;Richard Miller;High
+26;2023-08-12;Fire damage;38516;38;Critical;Joseph Garcia;Medium
+26;2024-01-31;Shaft misalignment;1938;9;Mechanical;Daniel Taylor;High
+27;2023-02-05;Structural failure;34171;62;Critical;Christopher Anderson;High
+27;2023-12-29;Communication loss;253;2;Software;Richard Miller;Critical
+28;2023-03-05;Hydraulic leak;2477;4;Mechanical;Daniel Taylor;Critical
+28;2023-04-09;Communication loss;1026;2;Software;Christopher Anderson;High
+28;2023-06-17;Firmware update required;913;2;Software;Charles Martinez;Medium
+29;2024-02-07;Complete breakdown;11939;28;Critical;Thomas Rodriguez;Critical
+29;2024-03-02;Motor failure;3989;13;Electrical;David Wilson;Critical
+30;2023-04-20;Filter cleaning;171;1;Maintenance;Daniel Taylor;Low
+30;2023-05-26;Filter cleaning;219;2;Maintenance;Mike Johnson;Medium
+31;2023-04-26;Belt replacement;300;1;Mechanical;John Smith;Medium
+31;2023-09-01;Fire damage;9772;82;Critical;Joseph Garcia;Medium
+31;2024-01-03;Firmware update required;706;2;Software;David Wilson;Medium
+32;2023-01-03;Sensor calibration error;997;4;Electrical;David Wilson;Medium
+32;2024-02-16;Filter cleaning;168;1;Maintenance;Charles Martinez;Medium
+32;2024-03-10;Sensor calibration error;667;2;Electrical;Thomas Rodriguez;High
+33;2023-02-09;Hydraulic leak;1360;4;Mechanical;Richard Miller;High
+33;2023-03-23;Seal replacement;330;2;Maintenance;David Wilson;High
+33;2023-08-15;Fire damage;38081;78;Critical;Charles Martinez;Critical
+33;2023-10-04;Wiring short circuit;583;2;Electrical;David Wilson;Critical
+33;2024-01-28;Filter cleaning;174;1;Maintenance;James Davis;Critical
+34;2023-07-19;Complete breakdown;13395;9;Critical;Christopher Anderson;Critical
+34;2023-10-05;Normal wear and tear;625;2;Maintenance;David Wilson;Critical
+34;2023-12-28;Belt replacement;215;2;Mechanical;Joseph Garcia;High
+35;2023-06-30;Hydraulic leak;1997;8;Mechanical;Joseph Garcia;Medium
+35;2023-09-07;Gear tooth fracture;3435;18;Mechanical;Thomas Rodriguez;Low
+36;2023-12-09;Structural failure;30153;71;Critical;Matthew Thomas;Medium
+36;2024-03-06;Normal wear and tear;1141;3;Maintenance;Christopher Anderson;Low
+37;2023-03-11;Normal wear and tear;386;2;Maintenance;James Davis;Critical
+37;2023-05-23;Communication loss;766;1;Software;Thomas Rodriguez;Low
+37;2023-06-17;Belt replacement;615;2;Mechanical;Richard Miller;Critical
+37;2023-10-31;Complete breakdown;12862;9;Critical;Mike Johnson;Critical
+37;2024-01-19;Lubrication required;106;2;Maintenance;David Wilson;Low
+38;2023-08-31;Structural failure;7748;92;Critical;David Wilson;Critical
+38;2023-11-30;Control board malfunction;3889;2;Electrical;David Wilson;Medium
+38;2023-12-25;Shaft misalignment;2010;5;Mechanical;Christopher Anderson;Low
+38;2024-03-05;Motor failure;6589;8;Electrical;David Wilson;Medium
+39;2023-02-08;Complete breakdown;13315;48;Critical;David Wilson;Low
+39;2023-03-25;Hydraulic leak;842;6;Mechanical;John Smith;High
+39;2023-10-22;Structural failure;33754;68;Critical;Joseph Garcia;Medium
+39;2023-12-23;Hydraulic leak;895;8;Mechanical;Christopher Anderson;Low
+40;2023-01-07;Communication loss;1253;1;Software;Joseph Garcia;High
+40;2023-08-08;Structural failure;16142;28;Critical;Charles Martinez;High
+41;2024-01-11;Filter cleaning;297;2;Maintenance;Christopher Anderson;Critical
+41;2024-02-29;Normal wear and tear;924;3;Maintenance;Joseph Garcia;Medium
+42;2023-05-23;Normal wear and tear;449;5;Maintenance;Christopher Anderson;Critical
+42;2024-02-27;Complete breakdown;6397;28;Critical;David Wilson;Low
+43;2023-09-11;Software crash;193;2;Software;David Wilson;High
+44;2023-02-13;Gear tooth fracture;4529;20;Mechanical;Charles Martinez;Medium
+44;2023-06-24;Shaft misalignment;1631;3;Mechanical;Charles Martinez;Medium
+44;2023-12-20;Seal replacement;430;3;Maintenance;Thomas Rodriguez;Critical
+45;2023-02-17;Hydraulic leak;1307;5;Mechanical;Matthew Thomas;Medium
+45;2023-06-06;Structural failure;23056;67;Critical;Thomas Rodriguez;High
+45;2023-08-06;Lubrication required;249;2;Maintenance;Matthew Thomas;Critical
+46;2023-05-09;Gear tooth fracture;2188;11;Mechanical;Richard Miller;Low
+47;2023-02-21;Belt replacement;453;1;Mechanical;Richard Miller;Medium
+47;2023-05-22;Complete breakdown;14455;41;Critical;Christopher Anderson;High
+47;2024-01-26;Bearing wear;1384;6;Mechanical;Matthew Thomas;Critical
+48;2023-12-29;Lubrication required;144;2;Maintenance;John Smith;Low
+49;2023-01-07;Complete breakdown;6658;38;Critical;Thomas Rodriguez;Critical
+49;2023-12-24;Power supply issue;3012;8;Electrical;Thomas Rodriguez;Low
+50;2023-01-27;Shaft misalignment;2456;4;Mechanical;Mike Johnson;Critical
+51;2023-02-13;Gear tooth fracture;2170;22;Mechanical;Joseph Garcia;Medium
+51;2023-10-23;Water damage;4756;25;Critical;Robert Brown;High
+52;2023-06-06;Complete breakdown;12174;11;Critical;Christopher Anderson;Low
+52;2023-07-14;Normal wear and tear;1130;5;Maintenance;James Davis;Critical
+52;2024-01-26;Belt replacement;790;1;Mechanical;James Davis;Low
+53;2023-03-30;Lubrication required;118;1;Maintenance;John Smith;Critical
+54;2023-11-01;Seal replacement;249;1;Maintenance;David Wilson;High
+54;2023-12-28;Hydraulic leak;2259;2;Mechanical;Daniel Taylor;Medium
+55;2023-02-06;Control board malfunction;1479;6;Electrical;Christopher Anderson;High
+55;2023-02-28;Lubrication required;195;1;Maintenance;James Davis;Medium
+55;2023-08-13;Sensor calibration error;679;3;Electrical;Matthew Thomas;Critical
+55;2024-02-08;Water damage;22326;58;Critical;David Wilson;Critical
+56;2023-04-28;Structural failure;31392;93;Critical;Christopher Anderson;Low
+56;2023-08-10;Software crash;409;2;Software;John Smith;Low
+56;2023-09-14;Lubrication required;332;2;Maintenance;Mike Johnson;Low
+56;2024-01-27;Structural failure;30916;54;Critical;Christopher Anderson;Low
+57;2023-03-31;Seal replacement;365;3;Maintenance;Thomas Rodriguez;High
+57;2023-04-03;Complete breakdown;9141;48;Critical;Thomas Rodriguez;Low
+57;2023-08-29;PLC program error;1136;4;Software;Richard Miller;Low
+58;2023-05-10;Software crash;159;2;Software;Charles Martinez;Low
+58;2023-06-18;Communication loss;1264;3;Software;Daniel Taylor;Critical
+58;2024-02-21;Lubrication required;98;2;Maintenance;Mike Johnson;High
+59;2023-10-05;Normal wear and tear;623;2;Maintenance;David Wilson;High
+59;2023-11-15;Seal replacement;420;2;Maintenance;John Smith;Medium
+60;2023-03-09;Hydraulic leak;2194;7;Mechanical;Thomas Rodriguez;Low
+62;2023-10-10;Communication loss;440;2;Software;Mike Johnson;Critical
+62;2024-02-14;Gear tooth fracture;2497;14;Mechanical;Charles Martinez;Low
+63;2023-02-05;Shaft misalignment;2199;8;Mechanical;Charles Martinez;High
+63;2023-07-16;Belt replacement;763;3;Mechanical;Matthew Thomas;Medium
+63;2023-08-01;Seal replacement;341;1;Maintenance;Thomas Rodriguez;Medium
+63;2023-11-28;Power supply issue;2441;7;Electrical;James Davis;High
+64;2023-05-25;Hydraulic leak;2405;8;Mechanical;Robert Brown;Critical
+64;2023-08-22;Software crash;196;1;Software;Christopher Anderson;Critical
+64;2023-10-03;Seal replacement;276;2;Maintenance;Charles Martinez;Critical
+65;2024-02-02;Communication loss;339;3;Software;Matthew Thomas;Critical
+66;2023-02-21;Normal wear and tear;302;5;Maintenance;John Smith;Medium
+66;2023-09-11;Control board malfunction;1317;10;Electrical;Christopher Anderson;High
+66;2024-02-20;Firmware update required;595;3;Software;Daniel Taylor;Medium
+67;2023-11-16;Firmware update required;865;1;Software;Richard Miller;Critical
+67;2023-12-02;Power supply issue;706;5;Electrical;James Davis;High
+68;2023-05-01;Water damage;12416;30;Critical;Matthew Thomas;Low
+68;2023-08-11;Sensor calibration error;978;1;Electrical;Thomas Rodriguez;Medium
+68;2023-11-17;Seal replacement;546;3;Maintenance;John Smith;Low
+68;2023-12-22;Hydraulic leak;518;2;Mechanical;Richard Miller;Low
+69;2023-07-11;Communication loss;548;2;Software;Charles Martinez;Critical
+70;2023-11-14;Structural failure;11891;83;Critical;Christopher Anderson;Medium
+70;2024-02-10;Bearing wear;1296;5;Mechanical;Mike Johnson;Critical
+71;2023-11-23;Shaft misalignment;2382;7;Mechanical;Daniel Taylor;Low
+72;2023-08-27;Hydraulic leak;1047;2;Mechanical;Thomas Rodriguez;High
+72;2023-10-28;Hydraulic leak;2137;7;Mechanical;James Davis;Critical
+72;2024-03-08;Hydraulic leak;1215;5;Mechanical;Thomas Rodriguez;Low
+73;2023-10-20;PLC program error;1477;4;Software;Matthew Thomas;High
+75;2023-07-22;Shaft misalignment;533;3;Mechanical;Christopher Anderson;Critical
+75;2023-11-22;Belt replacement;785;2;Mechanical;Daniel Taylor;Medium
+75;2024-03-02;Hydraulic leak;1342;6;Mechanical;Richard Miller;Medium
+76;2023-10-24;PLC program error;1799;3;Software;Mike Johnson;High
+76;2023-11-18;Water damage;4291;35;Critical;Thomas Rodriguez;Low
+77;2023-08-01;Bearing wear;1422;5;Mechanical;Charles Martinez;High
+78;2023-05-20;Bearing wear;1652;16;Mechanical;Thomas Rodriguez;High
+78;2024-01-18;Software crash;158;2;Software;Mike Johnson;Medium
+79;2023-02-16;Firmware update required;214;2;Software;Charles Martinez;Low
+79;2023-04-26;Structural failure;27731;70;Critical;Charles Martinez;High
+79;2023-08-21;PLC program error;1677;4;Software;Christopher Anderson;Critical
+80;2023-07-10;Sensor calibration error;891;2;Electrical;Thomas Rodriguez;Low
+80;2023-11-14;Lubrication required;247;1;Maintenance;Daniel Taylor;Low
+80;2023-11-22;Normal wear and tear;1131;4;Maintenance;Daniel Taylor;Critical
+84;2023-03-01;Sensor calibration error;440;2;Electrical;Joseph Garcia;Critical
+84;2023-07-09;Structural failure;28351;89;Critical;Joseph Garcia;Medium
+84;2023-08-01;Water damage;6244;69;Critical;Thomas Rodriguez;Critical
+85;2023-05-24;Control board malfunction;3627;7;Electrical;David Wilson;Critical
+85;2023-08-16;Gear tooth fracture;4171;8;Mechanical;Daniel Taylor;High
+85;2023-10-06;Water damage;14753;19;Critical;Joseph Garcia;High
+88;2023-01-26;Software crash;224;1;Software;Christopher Anderson;Medium
+88;2023-08-21;Wiring short circuit;1657;2;Electrical;Daniel Taylor;Low
+90;2023-04-17;Complete breakdown;5538;22;Critical;Richard Miller;Medium
+90;2024-02-08;Fire damage;5185;59;Critical;Robert Brown;Medium
+91;2024-02-13;Bearing wear;1050;13;Mechanical;John Smith;Medium
+93;2023-01-27;Power supply issue;3438;5;Electrical;Charles Martinez;Low
+93;2023-05-02;Complete breakdown;7304;9;Critical;Robert Brown;High
+94;2023-08-20;Filter cleaning;106;1;Maintenance;Matthew Thomas;High
+94;2023-09-01;Normal wear and tear;996;4;Maintenance;Charles Martinez;Low
+95;2023-01-16;Control board malfunction;2761;8;Electrical;Joseph Garcia;Low
+96;2023-08-16;Wiring short circuit;465;3;Electrical;Christopher Anderson;Medium
+99;2023-10-08;Software crash;295;2;Software;Thomas Rodriguez;Critical
+101;2023-08-09;Normal wear and tear;1109;3;Maintenance;Joseph Garcia;High
+101;2024-03-12;Water damage;24329;72;Critical;Charles Martinez;Medium
+102;2023-07-24;Communication loss;444;3;Software;Joseph Garcia;High
+102;2023-12-07;Shaft misalignment;2033;5;Mechanical;Daniel Taylor;Critical
+104;2023-02-17;Communication loss;447;3;Software;Robert Brown;Low
+104;2023-10-28;Lubrication required;367;2;Maintenance;Daniel Taylor;Low
+105;2023-12-07;Communication loss;355;3;Software;Christopher Anderson;High
+106;2023-10-23;Filter cleaning;104;1;Maintenance;Daniel Taylor;Critical
+109;2023-07-08;Sensor calibration error;980;3;Electrical;Christopher Anderson;Medium
+109;2024-02-18;Communication loss;1398;1;Software;Christopher Anderson;High
+112;2023-02-05;Power supply issue;3435;7;Electrical;John Smith;Low
+112;2023-06-23;PLC program error;312;3;Software;Robert Brown;Critical
+113;2023-04-21;Firmware update required;629;2;Software;Richard Miller;Medium
+113;2023-07-09;Hydraulic leak;1728;8;Mechanical;Christopher Anderson;Low
+114;2023-03-21;Bearing wear;3130;3;Mechanical;Daniel Taylor;Low
+114;2023-05-20;Normal wear and tear;877;5;Maintenance;Thomas Rodriguez;Critical
+115;2023-04-21;Filter cleaning;79;2;Maintenance;Joseph Garcia;Low
+117;2023-09-07;Filter cleaning;220;2;Maintenance;John Smith;Medium
+118;2023-11-03;Control board malfunction;831;5;Electrical;James Davis;Medium
+119;2023-09-12;Communication loss;609;2;Software;Joseph Garcia;Medium
+119;2024-01-27;Shaft misalignment;1685;8;Mechanical;Mike Johnson;Low
+120;2024-03-02;Structural failure;30417;65;Critical;Mike Johnson;Critical
