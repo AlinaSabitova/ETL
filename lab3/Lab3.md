@@ -6,7 +6,7 @@
 
 ## Архитектура решения
 
-<img width="1000" height="350" alt="image" src="lab3/images/ETL_lab3_pentaho.jpg" />
+<img width="1000" height="350" alt="image" src="[lab3/images/ETL_lab3_pentaho.jpg](https://github.com/AlinaSabitova/ETL/blob/main/lab3/images/ETL_lab3_pentaho.jpg)" />
 
 ## Шаг 1. Подготовка источника (PostgreSQL)
 
