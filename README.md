@@ -27,3 +27,5 @@
 [Sales_analysis](/lab2/sales_analysis.ktr)
 
 [JOB](/lab2/Job%20CSV_to_MYsql.kjb)
+
+# Лабораторная №3
