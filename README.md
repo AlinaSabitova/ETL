@@ -32,8 +32,8 @@
 
 [Отчет](/lab3/Lab3.md)
 
-[Трансформация обработки Postgre+Excel]()
+[Трансформация обработки Postgre+Excel](/lab3/Postgre%20to%20Mysql.ktr)
 
-[Трансформация обработки CSV]()
+[Трансформация обработки CSV](/lab3/History%20repair.ktr)
 
-[JOB]()
+[JOB](/lab3/Job_lab3_etl.kjb)
