@@ -99,5 +99,159 @@ missing_count_percent
 
 Видим, что в датасете полностью отсутствуют пропущенные значения
 
+Теперь проверим поле zpid на уникальность значений. Сначала подсчитаем уникальные и неуникальные значения (построим графы вычислений):
 
-# 
+```
+unique_zpids = df['zpid'].nunique()
+zpid_freq = df['zpid'].value_counts()
+
+duplicate_rows = (zpid_freq - 1).sum()
+```
+
+Затем запустим вычисления:
+
+```
+with ProgressBar():
+    n_unique = unique_zpids.compute()
+    n_duplicate_rows = duplicate_rows.compute() 
+
+print(f"Уникальных zpid: {n_unique}")
+print(f"Дублированных строк: {n_duplicate_rows}")
+```
+
+<img width="1767" height="471" alt="image" src="https://github.com/user-attachments/assets/47a7ffde-0806-4ab9-808f-95a863566c8c" />
+
+Видим, что все значения уникальны
+
+Далее проверим для всех ли записей датасета есть соответствующая фотография:
+
+Сначала создадим множество из имени файлов в папке с фото:
+
+<img width="1103" height="197" alt="image" src="https://github.com/user-attachments/assets/440bcf1f-e1fb-4f49-b97a-06ca8b9160ef" />
+
+Созадидим план вычислений:
+```
+# Функция для проверки
+def has_photo(image_name):
+    if pd.isna(image_name) or image_name == '':
+        return False
+    return image_name in available_images
+
+# Создаем план вычислений
+df['photo_exists'] = df['homeImage'].map(has_photo, meta=('photo_exists', 'bool'))
+houses_with_photo = df['photo_exists'].sum()
+total_houses = df.index.size
+percent_with_photo = (houses_with_photo / total_houses) * 100
+```
+
+Запустим их:
+
+<img width="1227" height="548" alt="image" src="https://github.com/user-attachments/assets/4af76a40-04ca-4bee-a29a-4e55a3f4aa51" />
+
+Также видим, что дома без фото в нашем датасете отсутствуют. В таком случае просто уберем столбцы, которые нам не нужны для анализа:
+
+```
+cols_to_drop = ['numOfParkingFeatures', 'numOfWindowFeatures',
+                'numOfPatioAndPorchFeatures', 'numOfSecurityFeatures',
+                'numOfWaterfrontFeatures', 'numOfAccessibilityFeatures',
+                'numOfPrimarySchools', 'numOfElementarySchools',
+                'numOfMiddleSchools', 'numOfHighSchools',
+                'avgSchoolDistance', 'avgSchoolSize', 'MedianStudentsPerTeacher']
+
+df_cleaned = df.drop(columns=cols_to_drop)
+```
+
+# Шаг 3. Load (Загрузка / Сохранение результатов)
+
+Сохраним очищенный Dask DataFrame обратно на диск в формате parquet
+
+<img width="1771" height="152" alt="image" src="https://github.com/user-attachments/assets/42db1f91-2278-44a6-8098-8e1c73774a5b" />
+
+Видим, что датасет действительно был загружен на диск:
+
+<img width="1504" height="272" alt="image" src="https://github.com/user-attachments/assets/1651c65b-801e-4ecf-8f6f-d348f4421d29" />
+
+# Шаг 4. Визуализация направленных ациклических графов (DAG)
+
+ Используя декоратор dask.delayed, создадим логику из простых python-функций и визуализируем план выполнения планировщика.
+
+
+## Простой граф
+
+Сначала создадим простой граф, визуализирующий процесс подсчета стоимости всего жилого фонда в датасете. Зададим 3 простых python-функции, создадим отложенные объекты, запустим вычисления и получим граф
+
+```
+# Подсчет общего количества домов
+def get_total_houses():
+    return len(df)
+
+# Подсчет средней цены
+def get_avg_price():
+    return df['latestPrice'].mean().compute()
+
+# Вычисление стоимости всего жилого фонда
+def calculate_total_value(total, avg):
+    return total * avg
+
+# Создание отложенных объектов
+x = delayed(get_total_houses)()
+y = delayed(get_avg_price)()
+z = delayed(calculate_total_value)(x, y)
+
+# Визуализация графа
+z.visualize(filename='easy_dag.png')
+
+from IPython.display import Image
+display(Image('easy_dag.png'))
+
+# Запуск вычислений и получение результата
+result = z.compute()
+```
+
+<img width="416" height="705" alt="image" src="https://github.com/user-attachments/assets/b39dfdb4-9024-451b-b65a-ea576df6368b" />
+
+## Сложный граф
+
+Теперь создадим сложный граф, который отражает процесс проведения расчетов. Считаем данные о каждом доме по его ID, отбираем только дома дороже 500 тысяч долларов, считаем цену за кв. м. для отфильтрованных домов
+
+```
+# Cписок zpid домов
+houses = [101, 102, 103, 104, 105]
+
+# Слой 1: Загружаем каждый дом
+def load_house(h):
+    return f"дом_{h}"
+
+layer1 = [delayed(load_house)(h) for h in houses]
+
+# Слой 2: Проверяем цену
+def filter_expensive(house):
+    if house['price'] > 500000:
+        return house
+    return None
+
+layer2 = [delayed(filter_expensive)(h) for h in layer1]
+
+# Слой 3: Считаем площадь
+def price_per_sqft(house):
+    if house is None:
+        return None
+    house['price_per_sqft'] = round(house['price'] / house['sqft'], 2)
+    return house
+
+layer3 = [delayed(price_per_sqft)(h) for h in layer2]
+
+total = delayed(list)(layer3)
+
+# Визуализация
+total.visualize(filename='difficult_dask.png')  
+display(Image('difficult_dask.png'))  
+```
+
+<img width="1060" height="1112" alt="image" src="https://github.com/user-attachments/assets/8a29e42e-bce3-428f-844d-74748a03373a" />
+
+# Анализ датасета
+
+Создадим дашборд на основе датасета:
+
+<img width="1745" height="1433" alt="image" src="https://github.com/user-attachments/assets/97986770-50b1-4729-84a1-95cca9b410f5" />
