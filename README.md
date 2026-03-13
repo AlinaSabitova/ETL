@@ -42,4 +42,4 @@
 
 [Отчет](/lab4/Lab4.md)
 
-[Файл .ipynb]()
+[Файл .ipynb](/lab4/etl_lab4.ipynb)
