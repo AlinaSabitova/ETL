@@ -37,3 +37,9 @@
 [Трансформация обработки CSV](/lab3/History%20repair.ktr)
 
 [JOB](/lab3/Job_lab3_etl.kjb)
+
+# Лабораторная №4
+
+[Отчет](/lab4/Lab4.md)
+
+[Файл .ipynb]()
