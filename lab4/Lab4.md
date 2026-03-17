@@ -95,77 +95,31 @@ with ProgressBar():
 missing_count_percent
 ```
 
-<img width="726" height="729" alt="image" src="https://github.com/user-attachments/assets/8edfc3f4-5d3b-460d-a9e7-811ae4f97504" />
+<img width="826" height="729" alt="image" src="https://github.com/user-attachments/assets/67559747-1fb2-41ef-a4f8-17cd7d6856f6" />
 
-Видим, что в датасете полностью отсутствуют пропущенные значения
-
-Теперь проверим поле zpid на уникальность значений. Сначала подсчитаем уникальные и неуникальные значения (построим графы вычислений):
+Видим, что в датасете есть поля с большим процентом пропущенных значений. Удалим их:
 
 ```
-unique_zpids = df['zpid'].nunique()
-zpid_freq = df['zpid'].value_counts()
+# 1. Получаем список столбцов для удаления
+columns_to_drop = list(missing_count_percent[missing_count_percent > 60].index)
+print("Столбцы на удаление:", columns_to_drop)
 
-duplicate_rows = (zpid_freq - 1).sum()
+# 2. Оптимизация. Убираем .compute() и ProgressBar!
+df_dropped = df.drop(columns=columns_to_drop)
+
+# 3. Проверка результата
+df_dropped.head()
 ```
 
-Затем запустим вычисления:
+<img width="1774" height="623" alt="image" src="https://github.com/user-attachments/assets/ef4a415d-1de8-4c76-a8bb-e327d583a9d9" />
 
-```
-with ProgressBar():
-    n_unique = unique_zpids.compute()
-    n_duplicate_rows = duplicate_rows.compute() 
-
-print(f"Уникальных zpid: {n_unique}")
-print(f"Дублированных строк: {n_duplicate_rows}")
-```
-
-<img width="1767" height="471" alt="image" src="https://github.com/user-attachments/assets/47a7ffde-0806-4ab9-808f-95a863566c8c" />
-
-Видим, что все значения уникальны
-
-Далее проверим для всех ли записей датасета есть соответствующая фотография:
-
-Сначала создадим множество из имени файлов в папке с фото:
-
-<img width="1103" height="197" alt="image" src="https://github.com/user-attachments/assets/440bcf1f-e1fb-4f49-b97a-06ca8b9160ef" />
-
-Созадидим план вычислений:
-```
-# Функция для проверки
-def has_photo(image_name):
-    if pd.isna(image_name) or image_name == '':
-        return False
-    return image_name in available_images
-
-# Создаем план вычислений
-df['photo_exists'] = df['homeImage'].map(has_photo, meta=('photo_exists', 'bool'))
-houses_with_photo = df['photo_exists'].sum()
-total_houses = df.index.size
-percent_with_photo = (houses_with_photo / total_houses) * 100
-```
-
-Запустим их:
-
-<img width="1227" height="548" alt="image" src="https://github.com/user-attachments/assets/4af76a40-04ca-4bee-a29a-4e55a3f4aa51" />
-
-Также видим, что дома без фото в нашем датасете отсутствуют. В таком случае просто уберем столбцы, которые нам не нужны для анализа:
-
-```
-cols_to_drop = ['numOfParkingFeatures', 'numOfWindowFeatures',
-                'numOfPatioAndPorchFeatures', 'numOfSecurityFeatures',
-                'numOfWaterfrontFeatures', 'numOfAccessibilityFeatures',
-                'numOfPrimarySchools', 'numOfElementarySchools',
-                'numOfMiddleSchools', 'numOfHighSchools',
-                'avgSchoolDistance', 'avgSchoolSize', 'MedianStudentsPerTeacher']
-
-df_cleaned = df.drop(columns=cols_to_drop)
 ```
 
 # Шаг 3. Load (Загрузка / Сохранение результатов)
 
-Сохраним очищенный Dask DataFrame обратно на диск в формате parquet
+Сохраним очищенный Dask DataFrame обратно на диск:
 
-<img width="1771" height="152" alt="image" src="https://github.com/user-attachments/assets/42db1f91-2278-44a6-8098-8e1c73774a5b" />
+<img width="1093" height="266" alt="image" src="https://github.com/user-attachments/assets/f4b1dfcf-d0eb-4131-8192-d2037b5c93fd" />
 
 Видим, что датасет действительно был загружен на диск:
 
@@ -252,12 +206,16 @@ display(Image('difficult_dask.png'))
 
 # Анализ датасета
 
-Создадим дашборд на основе датасета:
+Создадим дашборд с помощью библиотеки Altrair на основе датасета:
 
-<img width="1745" height="1433" alt="image" src="https://github.com/AlinaSabitova/ETL/blob/main/lab4/images/%D0%91%D0%B5%D0%B7%20%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.png" />
+<img width="1216" height="1092" alt="image" src="https://github.com/user-attachments/assets/d35d55ac-96a5-4a9a-a96d-a022b73a677f" />
 
-1. График "Количество домов по десятилетиям постройки" показывает, что Остин начал застраиваться в 1900-х годах, количество строящихся в год домов постепенно возрастало, а пик застройки пришелся на 2000-е годы. Примерно в 2010-х количество строящихся домов пошло на спад.
-2. График "Количество продаж по месяцам" отражает, что большая часть продаж приходится на летние месяцы, далее наблюдается спад. Самые низкие продажи в январе и феврале.
+Благодаря возможностям библиотеки графики интерактивны, при наведении на них, отображаются метки:
+
+<img width="503" height="436" alt="image" src="https://github.com/user-attachments/assets/7c863a83-a7bf-4fc6-96b5-9948780a3763" />
+
+1. График "Количество домов по десятилетиям постройки" показывает, что Остин начал застраиваться в 1900-х годах, в 1990-х начался резкий рост количества строящихся домов, а пик застройки пришелся на 2000-е годы. Примерно в 2010-х количество строящихся домов пошло на спад.
+2. График "Количество продаж по месяцам" отражает, что большая часть продаж приходится на летние месяцы, пик - в июне. Далее наблюдается спад. Самые низкие продажи в декабре, январе и феврале.
 3. График "Средняя цена по типам домов" показывает, что наибольшая цена на  vacant land - незастроенный земельный участок. Наименьшая цена на townhouse - таунхаус и condo - квартиры в многоквартирном доме.
 4. График "Распределение домов по наличию красивого вида"  показывает процент домов с живописным видом и без, так же в легенде для каждого типа домов указана средняя цена.  Видим, что домов с красивым видом только около 22%, а их средняя цена значительно выше, практически на 150 тысяч долларов
 
