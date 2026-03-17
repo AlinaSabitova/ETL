@@ -117,7 +117,7 @@ df_dropped.head()
 
 Сохраним очищенный Dask DataFrame обратно на диск:
 
-<img width="1093" height="266" alt="image" src="https://github.com/user-attachments/assets/f4b1dfcf-d0eb-4131-8192-d2037b5c93fd" />
+<img width="1123" height="187" alt="image" src="https://github.com/user-attachments/assets/d56f8505-fff3-48ae-8cb7-e9da4fb14ebe" />
 
 Видим, что датасет действительно был загружен на диск:
 
