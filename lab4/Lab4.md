@@ -113,8 +113,6 @@ df_dropped.head()
 
 <img width="1774" height="623" alt="image" src="https://github.com/user-attachments/assets/ef4a415d-1de8-4c76-a8bb-e327d583a9d9" />
 
-```
-
 # Шаг 3. Load (Загрузка / Сохранение результатов)
 
 Сохраним очищенный Dask DataFrame обратно на диск:
