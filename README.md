@@ -43,3 +43,9 @@
 [Отчет](/lab4/Lab4.md)
 
 [Файл .ipynb](/lab4/etl_lab4__.ipynb)
+
+# Лабораторная №5.1
+
+[Отчет](/lab5/Lab5.md)
+
+[Папка проекта](/lab5.1/business_case_umbrella)
