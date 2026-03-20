@@ -54,11 +54,351 @@
 
 ## Dockerfile
 
+Создает кастомный образ на основе Apache Airflow, устанавливает необходимые библиотеки, а также создает директории для данных, логов и приложения с правами пользователя airflow:
+
+```
+FROM apache/airflow:slim-2.8.1-python3.11
+
+USER airflow
+
+# Устанавливаем необходимые Python-библиотеки
+RUN pip install --no-cache-dir \
+    pandas \
+    scikit-learn \
+    joblib \
+    requests \
+    azure-storage-blob==12.8.1 \
+    psycopg2-binary \
+    streamlit \
+    matplotlib \
+    "connexion[swagger-ui]"
+
+USER root
+
+# Создаём директории и назначаем владельца
+RUN mkdir -p /opt/airflow/data /opt/airflow/logs /opt/airflow/app \
+    && chown -R airflow: /opt/airflow/data /opt/airflow/logs /opt/airflow/app
+
+USER airflow
+```
+
 ## docker-compose.yml
+
+Описывает инфраструктуру из пяти сервисов: PostgreSQL для хранения метаданных Airflow, init для инициализации базы данных и создания пользователя, веб-сервер Airflow на порту 8080, планировщик задач и Streamlit для визуализации на порту 8501, все сервисы объединены в общую сеть:
+
+```
+x-environment: &airflow_environment
+  - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+  - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+  - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
+  - AIRFLOW__CORE__LOAD_EXAMPLES=False
+  - AIRFLOW__CORE__STORE_DAG_CODE=True
+  - AIRFLOW__CORE__STORE_SERIALIZED_DAGS=True
+  - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+  - AIRFLOW__WEBSERVER__RBAC=False
+  - AIRFLOW__WEBSERVER__SECRET_KEY=supersecretkey123
+  - AIRFLOW__LOGGING__LOGGING_LEVEL=INFO
+  - AIRFLOW__LOGGING__REMOTE_LOGGING=False
+  - AIRFLOW__LOGGING__BASE_LOG_FOLDER=/opt/airflow/logs
+
+x-airflow-image: &airflow_image custom-airflow:slim-2.8.1-python3.11
+
+services:
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - airflow-network
+
+  init:
+    image: *airflow_image
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment: *airflow_environment
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - logs:/opt/airflow/logs
+    entrypoint: >
+      bash -c "
+      sleep 5 &&
+      airflow db upgrade &&
+      airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.org &&
+      echo 'Airflow init completed.'"
+    healthcheck:
+      test: ["CMD", "airflow", "db", "check"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+    networks:
+      - airflow-network 
+
+  webserver:
+    image: *airflow_image
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    ports:
+      - "8080:8080"
+    restart: always
+    environment: *airflow_environment
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - logs:/opt/airflow/logs
+    command: webserver
+    networks:
+      - airflow-network  
+
+  scheduler:
+    image: *airflow_image
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    restart: always
+    environment: *airflow_environment
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - logs:/opt/airflow/logs
+    command: scheduler
+    networks:
+      - airflow-network  
+
+  streamlit:
+    image: *airflow_image
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    ports:
+      - "8501:8501"
+    restart: always
+    volumes:
+      - ./data:/opt/airflow/data
+      - ./app:/opt/airflow/app
+    command: bash -c "streamlit run /opt/airflow/app/app.py --server.port=8501 --server.address=0.0.0.0"
+    networks:
+      - airflow-network
+
+networks:  
+  airflow-network:
+    driver: bridge
+
+volumes:
+  logs:
+  postgres_data:
+```
 
 ## dags/real_umbrella.py
 
+Реализует ETL-пайплайн: получает прогноз погоды в Амстердаме на 7 дней через Open-Meteo API, очищает данные, фильтрует дни с температурой ниже 0°C, генерирует моковые данные о продажах, объединяет их, обучает модель линейной регрессии для прогнозирования продаж на основе температуры и сохраняет модель для дальнейшего использования:
+
+```
+import os
+import requests
+import pandas as pd
+import joblib
+from datetime import datetime
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.utils.dates import days_ago
+from sklearn.linear_model import LinearRegression
+ 
+default_args = {
+    'owner': 'airflow',
+    'start_date': days_ago(1),
+}
+ 
+dag = DAG(
+    dag_id="real_umbrella_amsterdam",
+    default_args=default_args,
+    description="Fetch Amsterdam weather, clean, filter (<0°C), train ML, deploy.",
+    schedule_interval="@daily",
+    catchup=False
+)
+ 
+def fetch_weather_forecast():
+    # Open-Meteo API для Амстердама (широта: 52.37, долгота: 4.89)
+    url = (
+        "https://api.open-meteo.com/v1/forecast?"
+        "latitude=52.37&longitude=4.89"
+        "&daily=temperature_2m_mean"
+        "&timezone=Europe%2FAmsterdam"
+        "&forecast_days=7"
+    )
+    
+    response = requests.get(url)
+    data = response.json()
+    
+    # Извлекаем списки дат и температур из JSON
+    dates = data['daily']['time']
+    temperatures = data['daily']['temperature_2m_mean']
+    
+    # Создаем DataFrame
+    df = pd.DataFrame({
+        'date': dates,
+        'temperature': temperatures
+    })
+    
+    data_dir = '/opt/airflow/data'
+    os.makedirs(data_dir, exist_ok=True)
+    df.to_csv(os.path.join(data_dir, 'weather_forecast.csv'), index=False)
+    print("Weather forecast for Amsterdam saved via Open-Meteo.")
+ 
+def clean_weather_data():
+    data_dir = '/opt/airflow/data'
+    df = pd.read_csv(os.path.join(data_dir, 'weather_forecast.csv'))
+    
+    # Очистка
+    df['temperature'] = df['temperature'].ffill()
+    
+    # Фильтрация: оставляем только дни с температурой < 0°C
+    df_filtered = df[df['temperature'] < 0].copy()
+    
+    # Сохраняем отфильтрованные данные
+    df_filtered.to_csv(os.path.join(data_dir, 'clean_weather.csv'), index=False)
+    print(f"Cleaned weather data filtered: {len(df_filtered)} days with temperature < 0°C")
+ 
+def fetch_sales_data():
+    data_dir = '/opt/airflow/data'
+    # Берём даты из прогноза
+    weather_df = pd.read_csv(os.path.join(data_dir, 'weather_forecast.csv'))
+    dates = weather_df['date'].tolist()
+    
+    # Моковые данные продаж
+    sales = [8, 15, 10, 10, 9, 20, 30][:len(dates)]
+    
+    df = pd.DataFrame({'date': dates, 'sales': sales})
+    df.to_csv(os.path.join(data_dir, 'sales_data.csv'), index=False)
+    print("Sales data saved.")
+ 
+def clean_sales_data():
+    data_dir = '/opt/airflow/data'
+    df = pd.read_csv(os.path.join(data_dir, 'sales_data.csv'))
+    df['sales'] = df['sales'].ffill()
+    df.to_csv(os.path.join(data_dir, 'clean_sales.csv'), index=False)
+    print("Cleaned sales data saved.")
+ 
+def join_datasets():
+    data_dir = '/opt/airflow/data'
+    weather_df = pd.read_csv(os.path.join(data_dir, 'clean_weather.csv'))
+    sales_df = pd.read_csv(os.path.join(data_dir, 'clean_sales.csv'))
+    
+    # Объединение
+    joined_df = pd.merge(weather_df, sales_df, on='date', how='inner')
+    joined_df.to_csv(os.path.join(data_dir, 'joined_data.csv'), index=False)
+    print(f"Joined dataset saved with {len(joined_df)} records.")
+ 
+def train_ml_model():
+    data_dir = '/opt/airflow/data'
+    
+    # Обучаемся на исходных данных (без фильтрации)
+    original_weather = pd.read_csv(os.path.join(data_dir, 'weather_forecast.csv'))
+    original_sales = pd.read_csv(os.path.join(data_dir, 'sales_data.csv'))
+    
+    # Объединяем исходные данные
+    original_df = pd.merge(original_weather, original_sales, on='date', how='inner')
+    
+    # Проверяем, есть ли данные
+    if len(original_df) == 0:
+        print("Warning: No data for training. Model training skipped.")
+        return
+    
+    X = original_df[['temperature']]
+    y = original_df['sales']
+    
+    model = LinearRegression()
+    model.fit(X, y)
+    
+    joblib.dump(model, os.path.join(data_dir, 'ml_model.pkl'))
+    print(f"ML model trained on {len(original_df)} samples and saved.")
+ 
+def deploy_ml_model():
+    data_dir = '/opt/airflow/data'
+    model_path = os.path.join(data_dir, 'ml_model.pkl')
+    
+    if os.path.exists(model_path):
+        model = joblib.load(model_path)
+        print("Model deployed successfully:", model)
+    else:
+        print("No model found to deploy.")
+ 
+# Инициализация операторов
+t1 = PythonOperator(task_id="fetch_weather_forecast", python_callable=fetch_weather_forecast, dag=dag)
+t2 = PythonOperator(task_id="clean_weather_data", python_callable=clean_weather_data, dag=dag)
+t3 = PythonOperator(task_id="fetch_sales_data", python_callable=fetch_sales_data, dag=dag)
+t4 = PythonOperator(task_id="clean_sales_data", python_callable=clean_sales_data, dag=dag)
+t5 = PythonOperator(task_id="join_datasets", python_callable=join_datasets, dag=dag)
+t6 = PythonOperator(task_id="train_ml_model", python_callable=train_ml_model, dag=dag)
+t7 = PythonOperator(task_id="deploy_ml_model", python_callable=deploy_ml_model, dag=dag)
+ 
+# Настройка зависимостей (граф)
+t1 >> t2
+t3 >> t4
+[t2, t4] >> t5
+t5 >> t6 >> t7
+```
+
 ## app/app.py
+
+Создает Streamlit-дашборд, который визуализирует данные о погоде в Амстердаме: загружает исходный прогноз на 7 дней из Open-Meteo API, отображает его в виде таблицы, затем показывает отфильтрованные дни с температурой ниже 0°C (либо сообщение об их отсутствии) и выводит среднюю температуру:
+
+```
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+from datetime import datetime
+ 
+st.set_page_config(page_title="Прогноз погоды Амстердам", layout="wide")
+st.title("Анализ погоды в Амстердаме на 7 дней (Вариант 12)")
+ 
+data_path = '/opt/airflow/data/clean_weather.csv'
+original_data_path = '/opt/airflow/data/weather_forecast.csv'
+ 
+if os.path.exists(original_data_path):
+    original_df = pd.read_csv(original_data_path)
+    
+    st.header("Исходные данные о погоде")
+    st.write("Данные, полученные из Open-Meteo API (прогноз на 7 дней)")
+    st.dataframe(original_df)
+    
+    # Отфильтрованные данные
+    filtered_df = pd.read_csv(data_path) if os.path.exists(data_path) else pd.DataFrame()
+    
+    st.header("Отфильтрованные данные (температура ниже 0°C)")
+    
+    if len(filtered_df) > 0:
+        # Если есть отфильтрованные данные - показываем таблицу
+        st.success(f"Найдено {len(filtered_df)} дней с температурой ниже 0°C")
+        st.dataframe(filtered_df)
+    else:
+        # Если нет отфильтрованных данных - выводим сообщение
+        st.warning("⚠️ В прогнозе нет дней с температурой ниже 0°C")
+    
+    # Средняя температура
+    st.header("Средняя температура за период")
+    
+    # Используем исходные данные для расчета средней температуры
+    avg_temperature = original_df['temperature'].mean()
+    st.metric(label="Средняя температура", value=f"{avg_temperature:.2f} °C")
+    
+else:
+    st.warning("""Данные еще не сгенерированы""")
+```
 
 # Запуск
 
