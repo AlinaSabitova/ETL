@@ -48,4 +48,8 @@
 
 [Отчет](/lab5.1/Lab5_1.md)
 
-[Папка проекта](/lab5.1/business_case_umbrella)
+[Архитектура](/lab5.1/images/arhitecture_lab5.1_etl.drawio.png)
+
+[Ноутбук](/lab5.1/business_case_umbrella/прогноз_продаж.ipynb)
+
+[Модель](/lab5.1/business_case_umbrella/data/ml_model.pkl)
