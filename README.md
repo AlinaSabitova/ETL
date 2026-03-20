@@ -46,6 +46,6 @@
 
 # Лабораторная №5.1
 
-[Отчет](/lab5/Lab5.md)
+[Отчет](/lab5.1/Lab5_1.md)
 
 [Папка проекта](/lab5.1/business_case_umbrella)
