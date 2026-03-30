@@ -51,7 +51,7 @@ flowchart LR
 # Логика работы DAG
 
 ```mermaid
-flowchart TD
+graph TD
     START([Start]) --> CLEAN
 
     CLEAN[clean_data_directory<br/>Очистка папки data]
@@ -64,7 +64,7 @@ flowchart TD
 
     REPORT_FAILED --> ANALYZE[analyze_vulnerabilities<br/>Сканирует DAG → находит уязвимости → JSON]
 
-    ANALYZE --> NOTIFY[notify<br/>echo "DAG завершен"]
+    ANALYZE --> NOTIFY[notify<br/>echo DAG завершен]
 
     NOTIFY --> END([End])
 
