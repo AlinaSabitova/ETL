@@ -9,6 +9,11 @@
 
 # Архитектура решения
 
+# Архитектура аналитического решения
+
+## 1. Верхнеуровневая архитектура
+
+```mermaid
 graph TB
     subgraph Source_Layer["📡 Source Layer (Источники данных)"]
         API[Launch Library 2 API<br/>REST API]
