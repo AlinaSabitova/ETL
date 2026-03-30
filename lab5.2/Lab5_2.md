@@ -56,24 +56,24 @@ graph TD
 
     CLEAN[clean_data_directory<br/>Очистка папки data]
 
-    CLEAN --> DOWNLOAD_JSON[download_launches<br/>curl → API → launches.json]
+    CLEAN --> DOWNLOAD_JSON[download_launches<br/>Загрузка JSON из API]
 
-    DOWNLOAD_JSON --> DOWNLOAD_IMAGES[download_pictures<br/>requests.get → сохраняет фото]
+    DOWNLOAD_JSON --> DOWNLOAD_IMAGES[download_pictures<br/>Скачивание фото]
 
-    DOWNLOAD_IMAGES --> REPORT_FAILED[report_failed_images<br/>Собирает неудачные загрузки → JSON]
+    DOWNLOAD_IMAGES --> REPORT_FAILED[report_failed_images<br/>Отчет о неудачных фото]
 
-    REPORT_FAILED --> ANALYZE[analyze_vulnerabilities<br/>Сканирует DAG → находит уязвимости → JSON]
+    REPORT_FAILED --> ANALYZE[analyze_vulnerabilities<br/>Поиск уязвимостей в коде]
 
-    ANALYZE --> NOTIFY[notify<br/>echo DAG завершен]
+    ANALYZE --> NOTIFY[notify<br/>Уведомление]
 
     NOTIFY --> END([End])
 
-    DOWNLOAD_JSON --> SUCCESS[on_success_callback<br/>Анализирует запуски → JSON]
-    DOWNLOAD_JSON --> FAILURE[on_failure_callback<br/>Сохраняет ошибку → JSON]
+    DOWNLOAD_JSON --> SUCCESS[on_success_callback<br/>Мониторинг успешных запусков]
+    DOWNLOAD_JSON --> FAILURE[on_failure_callback<br/>Логирование ошибок DAG]
 
     style REPORT_FAILED fill:#ffe6cc,stroke:#d79b00
     style ANALYZE fill:#f8cecc,stroke:#b85450
     style SUCCESS fill:#e1d5e7,stroke:#9673a6
     style FAILURE fill:#e1d5e7,stroke:#9673a6
 ```
-ч
+
