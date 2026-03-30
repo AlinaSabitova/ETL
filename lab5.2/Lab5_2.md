@@ -14,38 +14,34 @@
 ## 1. Верхнеуровневая архитектура
 
 ```mermaid
-graph TB
-    subgraph Source_Layer["📡 Source Layer (Источники данных)"]
-        API[Launch Library 2 API<br/>REST API]
-        USER[Пользователь<br/>Веб-браузер]
+---
+config:
+  layout: elk
+---
+flowchart LR
+    API((🚀 Launch Library 2 API))
+
+    subgraph Docker[🐳 Docker]
+        Airflow["⚙️ Airflow"]
+        Jupyter["🧠 Jupyter"]
+        Streamlit["📊 Streamlit"]
     end
 
-    subgraph Storage_Layer["💾 Storage Layer (Хранилище данных)"]
-        DATA["./data/<br/>- images/<br/>- launches.json<br/>- failed_images_report.json<br/>- launch_monitoring_*.json<br/>- vulnerability_analysis_*.json"]
-        LOGS["./logs/<br/>Логи Airflow"]
-        DAGS["./dags/<br/>listing_sabitova_rocket.py"]
+    subgraph Host[💻 Ubuntu]
+        Data[(📁 ./data)]
+        Logs[(📁 ./logs)]
+        Dags[(📁 ./dags)]
     end
 
-    subgraph Business_Layer["⚙️ Business Layer (Бизнес-логика)"]
-        AIRFLOW[Apache Airflow<br/>ETL Pipeline<br/>Порт: 8080]
-        STREAMLIT[Streamlit<br/>BI Dashboard<br/>Порт: 8501]
-        JUPYTER[Jupyter Notebook<br/>ML обработка<br/>Порт: 8888]
-    end
+    API -->|1. Запрос| Airflow
+    Airflow -->|2. Сохраняет| Data
+    Airflow -.->|Логи| Logs
+    Airflow -.->|Читает| Dags
+    Data -->|3. Фото| Jupyter
+    Jupyter -->|4. Результаты| Data
+    Data -->|5. Отчеты| Streamlit
 
-    subgraph ML_Layer["🧠 ML Layer (ИИ-обработка)"]
-        CLIP[CLIP Neural Network<br/>Zero-Shot Classification]
-    end
-
-    API -->|HTTP GET /launches/upcoming| AIRFLOW
-    AIRFLOW -->|Сохраняет JSON и фото| DATA
-    AIRFLOW -->|Пишет логи| LOGS
-    AIRFLOW -->|Читает DAG| DAGS
-    
-    JUPYTER -->|Читает фото| DATA
-    JUPYTER -->|CLIP анализ| CLIP
-    JUPYTER -->|Сохраняет predictions| DATA
-    
-    STREAMLIT -->|Читает отчеты| DATA
-    STREAMLIT -->|Показывает дашборд| USER
-    
-    USER -->|Запуск DAG| AIRFLOW
+    style Data fill:#fff3e0,stroke:#f57c00
+    style Airflow fill:#ffe0b2,stroke:#fb8c00
+    style Jupyter fill:#c8e6c9,stroke:#43a047
+    style Streamlit fill:#b3e5fc,stroke:#03a9f4
