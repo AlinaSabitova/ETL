@@ -45,6 +45,7 @@ flowchart LR
     style Airflow fill:#ffe0b2,stroke:#fb8c00
     style Jupyter fill:#c8e6c9,stroke:#43a047
     style Streamlit fill:#b3e5fc,stroke:#03a9f4
+```
 
 ```mermaid
 ---
@@ -78,6 +79,7 @@ flowchart LR
 
     style API fill:#ce93d8,stroke:#6a1b9a
     style Airflow fill:#ffcc80,stroke:#e65100
+```
     style Jupyter fill:#a5d6a7,stroke:#2e7d32
     style Streamlit fill:#81d4fa,stroke:#01579b
     style Data fill:#ffe0b2,stroke:#f57c00
