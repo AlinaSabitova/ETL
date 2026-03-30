@@ -48,6 +48,16 @@ flowchart LR
     style Logs fill:#ffcdd2,stroke:#c62828
 ```
 
+# Технический стек
+
+- **Оркестрация**: Apache Airflow 2.8.1
+- **Контейнеризация**: Docker, Docker Compose
+- **Язык программирования**: Python 3.11
+- **Библиотеки (ETL & ML)**: Pandas, Scikit-learn, Joblib, Requests, Torch, Transformers, Pillow
+- **Визуализация**: Streamlit, Plotly, Matplotlib
+- **База данных**: PostgreSQL 12 (для метаданных Airflow)
+- **Источник данных**: Launch Library 2 API
+
 # Логика работы DAG
 
 ```mermaid
@@ -77,3 +87,15 @@ graph TD
     style FAILURE fill:#e1d5e7,stroke:#9673a6
 ```
 
+# Описание DAG
+
+| Функция | Описание |
+|---------|----------|
+| `clean_data_directory` | Очистка папки `/data` перед новым запуском |
+| `download_launches` | Получение данных о запусках из Launch Library 2 API, сохранение в `launches.json` |
+| `download_pictures` | Парсинг JSON, скачивание фотографий ракет из API, сохранение в `images/` |
+| `report_failed_images` | Формирование отчета о неудачных загрузках изображений, сохранение в `failed_images_report.json` |
+| `analyze_vulnerabilities` | Анализ кода DAG на наличие уязвимостей (хардкод секретов, отсутствие timeout, bare except), сохранение в `vulnerability_analysis_*.json` |
+| `notify` | Вывод сообщения об успешном завершении DAG |
+| `on_success_callback` | Колбэк при успешном выполнении DAG: анализ статусов запусков, сохранение в `launch_monitoring_*.json` |
+| `on_failure_callback` | Колбэк при ошибке DAG: логирование ошибки, сохранение в `dag_failure_*.json` |
