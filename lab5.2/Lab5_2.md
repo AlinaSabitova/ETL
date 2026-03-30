@@ -134,15 +134,14 @@ graph TD
 
 business_case_rocket_26/
 ├── dags/
-│ └── listing_sabitova_rocket.py
+│   └── listing_sabitova_rocket.py
 ├── app/
-│ └── app.py
+│   └── app.py
 ├── data/
 ├── logs/
 ├── ml.ipynb
 ├── Dockerfile
 ├── docker-compose.yml
-
 
 ## Dockerfile
 
