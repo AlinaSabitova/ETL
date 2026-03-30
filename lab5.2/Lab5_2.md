@@ -138,16 +138,7 @@ graph TD
 
 # Структура проекта
 
-business_case_rocket_26/
-├── dags/
-│   └── listing_sabitova_rocket.py
-├── app/
-│   └── app.py
-├── data/
-├── logs/
-├── ml.ipynb
-├── Dockerfile
-├── docker-compose.yml
+<img width="178" height="282" alt="image" src="https://github.com/user-attachments/assets/92b499c5-9584-4307-aa41-2364ab4ff737" />
 
 ## Dockerfile
 
@@ -720,13 +711,13 @@ Jupyter ноутбук для ML обработки:
 
 <img width="1116" height="632" alt="image" src="https://github.com/user-attachments/assets/6b146efc-8719-45c4-803e-a0c5fd0b739f" />
 
-#### Первое индивидуальное
+## Первое индивидуальное
 
 На второй вкладке выводится отчет по незагруженным изображениям. В данном случае их нет, все изображения загрузились успешно:
 
 <img width="1159" height="530" alt="image" src="https://github.com/user-attachments/assets/77596271-37a1-4b24-8a13-3e461fe54fc7" />
 
-#### Второе индивидуальное
+## Второе индивидуальное
 
 На следующей вкладке выводится статистика по запускам дага: ключевые показатели, график,таблица с историей запусков:
 
@@ -736,7 +727,7 @@ Jupyter ноутбук для ML обработки:
 
 <img width="1131" height="527" alt="image" src="https://github.com/user-attachments/assets/e9218ae8-62ec-48ab-9476-c43c7dcf820b" />
 
-#### Третье индивидуальное
+## Третье индивидуальное
 
 На последней вкладке выводится анализ дага на наличие уязвимостей:
 
