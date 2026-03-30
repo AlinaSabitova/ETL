@@ -7,6 +7,12 @@
 3. Научиться проектировать архитектуру ETL-решений и визуализировать её.
 4. Автоматизировать выгрузку результатов работы DAG из контейнера в хост-систему.
 
+## Индивидуальное задание
+
+| Вариант | Задание 1 (Анализ/ETL) | Задание 2 (Обработка/Логика) | Задание 3 (Отчетность/Метрики) |
+|---------|------------------------|------------------------------|-------------------------------|
+| 12 | Отчет по незагруженным изображениям | Мониторинг успешных запусков (Success/Fail callback) | Анализ уязвимостей реализации DAG |
+
 # Архитектура решения
 
 ```mermaid
@@ -523,236 +529,128 @@ import pandas as pd
 import json
 import os
 from PIL import Image
-from datetime import datetime
 import glob
- 
-st.set_page_config(page_title="Аналитика космических запусков - Сабитова", layout="wide")
- 
+
+st.set_page_config(page_title="Аналитика космических запусков", layout="wide")
+
 DATA_DIR = "/opt/airflow/data"
 JSON_FILE = f"{DATA_DIR}/launches.json"
 PREDICTIONS_FILE = f"{DATA_DIR}/ml_predictions.csv"
 IMAGES_DIR = f"{DATA_DIR}/images"
- 
+
 st.title("🚀 Аналитика космических запусков")
 st.markdown("### Вариант 12: Мониторинг успешных запусков и анализ уязвимостей")
-st.markdown("**DAG:** listing_sabitova_rocket")
- 
-# --- Tabs ---
+
 tab1, tab2, tab3, tab4 = st.tabs([
     "📊 Основная аналитика",
     "📸 Отчет по изображениям",
-    "📈 Мониторинг запусков DAG",
+    "📈 Мониторинг запусков",
     "🔒 Анализ уязвимостей"
 ])
- 
-# --- TAB 1 ---
+
+# --- Вкладка 1: Основная аналитика ---
 with tab1:
     st.header("Ближайшие запуски")
- 
     if os.path.exists(JSON_FILE):
         with open(JSON_FILE, "r") as f:
-            launches_data = json.load(f)
-            launches = launches_data.get("results", [])
- 
+            launches = json.load(f).get("results", [])
         if launches:
             df_launches = pd.DataFrame([{
                 "Имя миссии": l.get("name"),
-                "Статус": l.get("status", {}).get("name") if isinstance(l.get("status"), dict) else l.get("status"),
-                "Окно старта": l.get("window_start"),
+                "Статус": l.get("status", {}).get("name"),
                 "Провайдер": l.get("launch_service_provider", {}).get("name")
-                if isinstance(l.get("launch_service_provider"), dict) else None
             } for l in launches])
- 
             st.dataframe(df_launches)
- 
+            
             col1, col2 = st.columns(2)
- 
             with col1:
                 st.subheader("Запуски по провайдерам")
-                st.bar_chart(df_launches["Провайдер"].value_counts())
- 
+                provider_counts = df_launches["Провайдер"].value_counts()
+                if not provider_counts.empty:
+                    st.bar_chart(provider_counts)
             with col2:
                 st.subheader("Статусы запусков")
-                st.bar_chart(df_launches["Статус"].value_counts())
- 
-        else:
-            st.warning("Нет данных")
- 
+                status_counts = df_launches["Статус"].value_counts()
+                if not status_counts.empty:
+                    st.bar_chart(status_counts)
     else:
-        st.warning("Запустите DAG")
- 
-# --- TAB 2 ---
+        st.warning("Файл launches.json еще не загружен")
+    
+    st.markdown("---")
+    
+    st.header("🧠 Распознавание типов ракет (ML)")
+    if os.path.exists(PREDICTIONS_FILE):
+        df_preds = pd.read_csv(PREDICTIONS_FILE)
+        st.dataframe(df_preds)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Статистика по типам ракет")
+            rocket_counts = df_preds["predicted_rocket"].value_counts().sort_values(ascending=False)
+            if not rocket_counts.empty:
+                st.bar_chart(rocket_counts)
+        
+        with col2:
+            st.subheader("Средняя уверенность по типам")
+            avg_confidence = df_preds.groupby("predicted_rocket")["confidence"].mean().sort_values(ascending=False)
+            if not avg_confidence.empty:
+                st.bar_chart(avg_confidence)
+        
+        st.subheader("🖼️ Галерея распознанных ракет")
+        cols = st.columns(3)
+        for idx, row in df_preds.head(9).iterrows():
+            img_path = os.path.join(IMAGES_DIR, row['image_name'])
+            if os.path.exists(img_path):
+                with cols[idx % 3]:
+                    img = Image.open(img_path)
+                    st.image(img, caption=f"{row['predicted_rocket']} ({row['confidence']}%)", use_container_width=True)
+    else:
+        st.info("Результаты ML еще не готовы. Запустите ml.ipynb")
+
+# --- Вкладка 2: Отчет по незагруженным изображениям ---
 with tab2:
     st.header("📸 Отчет по незагруженным изображениям")
- 
-    report_path = f"{DATA_DIR}/failed_images_report.json"
- 
-    if os.path.exists(report_path):
-        with open(report_path) as f:
+    report_files = glob.glob(f"{DATA_DIR}/failed_images_report.json")
+    if report_files:
+        with open(report_files[0], 'r') as f:
             report = json.load(f)
- 
-        st.metric("Всего неудачных загрузок", report.get("total_failed", 0))
- 
-        if report.get("failed_images"):
-            df = pd.DataFrame(report["failed_images"])
-            st.dataframe(df)
-        else:
-            st.success("Все изображения загружены")
- 
+        st.metric("Всего неудачных загрузок", report.get('total_failed', 0))
+        if report.get('failed_images'):
+            df_failed = pd.DataFrame(report['failed_images'])
+            st.dataframe(df_failed)
+            if 'error' in df_failed.columns:
+                st.bar_chart(df_failed['error'].value_counts())
     else:
-        st.info("Нет отчета")
- 
-# --- TAB 3 (ИСПРАВЛЕНО) ---
+        st.info("Отчет пока не создан")
+
+# --- Вкладка 3: Мониторинг запусков ---
 with tab3:
-    st.header("📈 Мониторинг запусков DAG")
- 
+    st.header("📈 Мониторинг запусков")
     monitoring_files = glob.glob(f"{DATA_DIR}/launch_monitoring_*.json")
- 
     if monitoring_files:
- 
-        # --- АГРЕГАЦИЯ ---
-        total_success = 0
-        total_failed = 0
-        history_table = []
- 
-        for file_path in monitoring_files:
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
- 
-                    success = int(data.get('successful_launches_count', 0))
-                    failed = int(data.get('failed_launches_count', 0))
- 
-                    total_success += success
-                    total_failed += failed
- 
-                    history_table.append({
-                        "Дата запуска": data.get('execution_date', '—')[:19],
-                        "Статус": data.get('status', 'UNKNOWN'),
-                        "Run ID": str(data.get('run_id', '—'))[:35],
-                        "Длительность (сек)": round(float(data.get('duration_seconds', 0)), 1)
-                        if data.get('duration_seconds') else "—"
-                    })
- 
-            except:
-                continue
- 
-        # --- МЕТРИКИ ---
-        col1, col2, col3 = st.columns(3)
- 
+        with open(monitoring_files[-1], 'r') as f:
+            report = json.load(f)
+        col1, col2 = st.columns(2)
         with col1:
-            st.metric("✅ Успешные запуски DAG", total_success)
- 
+            st.metric("✅ Успешные запуски", report.get('successful_launches', 0))
         with col2:
-            st.metric("❌ Неудачные запуски DAG", total_failed)
- 
-        with col3:
-            total = total_success + total_failed
-            success_rate = (total_success / total * 100) if total > 0 else 0
-            st.metric("📈 Success Rate", f"{success_rate:.1f}%")
- 
-        # --- ГРАФИК ---
-        st.subheader("📊 Общее соотношение запусков")
- 
-        df_summary = pd.DataFrame({
-            "Тип": ["Успешные", "Неудачные"],
-            "Количество": [total_success, total_failed]
-        })
- 
-        st.bar_chart(df_summary.set_index("Тип"))
- 
-        # --- ИСТОРИЯ ---
-        st.subheader("История запусков")
- 
-        if history_table:
-            df_history = pd.DataFrame(history_table)
-            st.dataframe(df_history, use_container_width=True, hide_index=True)
-        else:
-            st.info("История пуста")
- 
+            st.metric("📊 Всего запусков", report.get('total_launches', 0))
     else:
-        st.info("Запустите DAG несколько раз")
- 
-# --- TAB 4 ---
+        st.info("Отчеты мониторинга пока не созданы")
+
+# --- Вкладка 4: Анализ уязвимостей ---
 with tab4:
     st.header("🔒 Анализ уязвимостей")
- 
     vuln_files = glob.glob(f"{DATA_DIR}/vulnerability_analysis_*.json")
- 
     if vuln_files:
-        latest = max(vuln_files, key=os.path.getctime)
- 
-        with open(latest) as f:
-            report = json.load(f)
- 
-        # --- Метрика ---
-        total_vuln = report.get("total_vulnerabilities", 0)
-        st.metric("Всего уязвимостей", total_vuln)
- 
-        # --- Таблица + график ---
-        if report.get("vulnerabilities"):
-            df = pd.DataFrame(report["vulnerabilities"])
-
- 
-            # ================= ГРАФИК =================
-            st.subheader("📊 Распределение уязвимостей по критичности")
- 
-            severity_counts = {
-                'CRITICAL': 0,
-                'HIGH': 0,
-                'MEDIUM': 0,
-                'LOW': 0
-            }
- 
-            for vuln in report['vulnerabilities']:
-                severity = vuln.get('severity', 'LOW')
-                severity_counts[severity] = severity_counts.get(severity, 0) + 1
- 
-            severity_data = pd.DataFrame({
-                'Критичность': list(severity_counts.keys()),
-                'Количество': list(severity_counts.values())
-            })
- 
-            # сортировка (как в твоём втором коде)
-            severity_order = {'CRITICAL': 0, 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3}
-            severity_data['order'] = severity_data['Критичность'].map(severity_order)
-            severity_data = severity_data.sort_values('order')
- 
-            # убираем нулевые значения
-            severity_data = severity_data[severity_data['Количество'] > 0]
- 
-            if not severity_data.empty:
-                st.bar_chart(severity_data.set_index('Критичность')['Количество'])
-            else:
-                st.info("Нет данных для графика")
- 
-            # ================= (опционально) детали =================
-            st.subheader("🔍 Детали уязвимостей")
- 
-            severity_icons = {
-                'CRITICAL': '🔴',
-                'HIGH': '🟠',
-                'MEDIUM': '🟡',
-                'LOW': '🔵'
-            }
- 
-            for vuln in report['vulnerabilities']:
-                severity = vuln.get('severity', 'LOW')
-                icon = severity_icons.get(severity, '⚪')
- 
-                line = vuln.get('line', '?')
-                message = vuln.get('message', '')
-                code = vuln.get('code', '')
- 
-                with st.expander(f"{icon} [{severity}] Строка {line}: {message[:80]}"):
-                    st.code(code, language='python')
-                    st.write(message)
- 
-        else:
-            st.success("Уязвимости не найдены 🎉")
- 
+        with open(vuln_files[-1], 'r') as f:
+            vuln_report = json.load(f)
+        st.metric("Всего уязвимостей", vuln_report.get('total_vulnerabilities', 0))
+        if vuln_report.get('vulnerabilities'):
+            for vuln in vuln_report['vulnerabilities']:
+                st.write(f"- **{vuln['type']}** [{vuln['severity']}]")
     else:
-        st.info("Нет отчета")
+        st.info("Анализ уязвимостей пока не выполнен")
 ```
 
 ## ml.ipynb
@@ -761,3 +659,104 @@ Jupyter ноутбук для ML обработки:
 - Загружает фотографии из `./data/images/`
 - Прогоняет их через нейросеть CLIP (Zero-Shot Classification)
 - Сохраняет предсказания в `ml_predictions.csv`
+
+# Ход выполнения
+
+Установка правильных прав доступа для Airflow (UID 50000):
+
+<img width="957" height="46" alt="Снимок экрана 2026-03-29 215346" src="https://github.com/user-attachments/assets/c8dadf5f-b280-4a6e-a0cf-c0b3f92df5fe" />
+
+Сборка кастомного образа с ML и Streamlit:
+
+<img width="956" height="307" alt="Снимок экрана 2026-03-29 215353" src="https://github.com/user-attachments/assets/3d2bee55-2f66-41cd-a227-167cc07327c3" />
+
+Запуск инфраструктуры в фоновом режиме:
+
+<img width="945" height="57" alt="Снимок экрана 2026-03-29 215409" src="https://github.com/user-attachments/assets/1c595f1c-9e6f-4cd9-80ad-ff3a81cd9085" />
+
+<img width="950" height="191" alt="Снимок экрана 2026-03-29 215451" src="https://github.com/user-attachments/assets/f347a258-4e5c-4b66-a154-30bc22e2f3cd" />
+
+Переходим в браузер по адресу http://localhost:8080. Откроется Airflow:
+
+<img width="1211" height="738" alt="Снимок экрана 2026-03-29 215547" src="https://github.com/user-attachments/assets/9b1083be-9e35-4c3e-9a34-eb32cdd3e4ac" />
+
+Видим наш даг, запустим его:
+
+<img width="1209" height="617" alt="Снимок экрана 2026-03-29 215558" src="https://github.com/user-attachments/assets/e7230d80-ee48-48da-a02c-889ec67b22c7" />
+
+<img width="1217" height="730" alt="Снимок экрана 2026-03-31 022127" src="https://github.com/user-attachments/assets/14c6df7e-bbe0-4aeb-999a-6b986509e6ce" />
+
+Схема дага в Airflow:
+
+<img width="883" height="619" alt="Снимок экрана 2026-03-31 022052" src="https://github.com/user-attachments/assets/97d9a002-9b0c-40ed-a0d3-0a6398aaa704" />
+
+Диаграмма Ганта:
+
+<img width="846" height="291" alt="Снимок экрана 2026-03-31 022102" src="https://github.com/user-attachments/assets/b3da9f84-ab70-4cf6-a19f-35e63eaa26c3" />
+
+Теперь перейдем в Jupyter по адресу http://localhost:8888 и запустим все коды ML-модели:
+
+<img width="1226" height="741" alt="Снимок экрана 2026-03-31 023518" src="https://github.com/user-attachments/assets/21ccbf2a-174b-471d-aa12-f26822d8ac6a" />
+
+<img width="1217" height="735" alt="Снимок экрана 2026-03-31 023532" src="https://github.com/user-attachments/assets/6c983add-cf17-4143-b406-dc4fc826698d" />
+
+<img width="1218" height="744" alt="Снимок экрана 2026-03-31 023544" src="https://github.com/user-attachments/assets/c558400f-73a2-4fa0-8877-f6b312b43b32" />
+
+Видим, что все коды выполнились успешно
+
+Теперь посмотрим аналитику в Streamlit по адресу http://localhost:8501 :
+
+<img width="1218" height="734" alt="image" src="https://github.com/user-attachments/assets/7dc7aa5d-d746-483b-9801-9e834691a917" />
+
+Есть 4 вкладки. Начнем с первой - основного задания. Здесь отображается информация о ближайших запусках, статусах запусков и результатов выполнения модели машинного обучения:
+
+<img width="1153" height="596" alt="image" src="https://github.com/user-attachments/assets/1b8a02c0-9ec2-458f-8efb-0848c6468d9b" />
+
+<img width="623" height="521" alt="image" src="https://github.com/user-attachments/assets/f5b46982-63c5-4b4a-9fdf-ca2442c49c55" />
+
+<img width="1180" height="379" alt="image" src="https://github.com/user-attachments/assets/d42cb7b3-617f-4bc2-a560-b05b9e62f603" />
+
+<img width="1131" height="473" alt="image" src="https://github.com/user-attachments/assets/c4cf14ef-be4c-41a5-b5b4-c907c3efd88d" />
+
+<img width="1116" height="632" alt="image" src="https://github.com/user-attachments/assets/6b146efc-8719-45c4-803e-a0c5fd0b739f" />
+
+#### Первое индивидуальное
+
+На второй вкладке выводится отчет по незагруженным изображениям. В данном случае их нет, все изображения загрузились успешно:
+
+<img width="1159" height="530" alt="image" src="https://github.com/user-attachments/assets/77596271-37a1-4b24-8a13-3e461fe54fc7" />
+
+#### Второе индивидуальное
+
+На следующей вкладке выводится статистика по запускам дага: ключевые показатели, график,таблица с историей запусков:
+
+<img width="1117" height="384" alt="image" src="https://github.com/user-attachments/assets/0956d40b-f1cd-40a6-b60e-2b8f02a7f275" />
+
+<img width="1153" height="492" alt="image" src="https://github.com/user-attachments/assets/50480fd5-9265-49bc-b505-cd1bcea148b4" />
+
+<img width="1131" height="527" alt="image" src="https://github.com/user-attachments/assets/e9218ae8-62ec-48ab-9476-c43c7dcf820b" />
+
+#### Третье индивидуальное
+
+На последней вкладке выводится анализ дага на наличие уязвимостей:
+
+В даг целенаправленно было добавленно несколько видов уязвимостей, чтобы можно было проверить корректность работы функции.
+
+В результате выводится общее число уязвимостей, график распределения уязвимостей по критичности и все обнаруженные уязвимости с указанием строки и выводом соответствующего фрагмента кода:
+
+<img width="1095" height="363" alt="image" src="https://github.com/user-attachments/assets/5a2b1bf8-c636-4613-bacf-e2116434799d" />
+
+<img width="1146" height="466" alt="image" src="https://github.com/user-attachments/assets/65afb392-5672-4948-970e-95787984751b" />
+
+<img width="1137" height="607" alt="image" src="https://github.com/user-attachments/assets/f48eecca-9bdd-4315-bd01-30ec2b0de901" />
+
+# Выводы
+
+В ходе работы выполнены все поставленные задачи:
+
+1. Развернут Apache Airflow в Docker — настроена оркестрация шести контейнеров с общим хранилищем через bind mounts.
+2. Реализован ETL-пайплайн — загрузка JSON и изображений из Launch Library API с сохранением в общую папку.
+3. Спроектирована архитектура — выделены слои: источник данных, хранение, бизнес-логика; выполнена визуализация в Mermaid.
+4. Автоматизирован экспорт — скрипт export_data.sh выгружает все результаты из контейнеров на хост с архивацией.
+
+Индивидуальные задания выполнены.
