@@ -52,27 +52,27 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    START([Start]) --> CLEAN[clean_data_directory<br/>Очистка папки data]
+    START([Start]) --> CLEAN
 
-    CLEAN --> DOWNLOAD_JSON[download_launches<br/>Загрузка JSON из API]
+    CLEAN[clean_data_directory<br/>Очистка папки data]
 
-    DOWNLOAD_JSON --> DOWNLOAD_IMAGES[download_pictures<br/>Скачивание фотографий<br/>⚠️ Уязвимость: нет timeout]
+    CLEAN --> DOWNLOAD_JSON[download_launches<br/>curl → API → launches.json]
 
-    DOWNLOAD_IMAGES --> REPORT[report_failed_images<br/>📸 Задание 1<br/>Отчет по незагруженным фото]
+    DOWNLOAD_JSON --> DOWNLOAD_IMAGES[download_pictures<br/>requests.get → сохраняет фото]
 
-    REPORT --> ANALYZE[analyze_vulnerabilities<br/>🔒 Задание 3<br/>Анализ уязвимостей DAG]
+    DOWNLOAD_IMAGES --> REPORT_FAILED[report_failed_images<br/>Собирает неудачные загрузки → JSON]
 
-    ANALYZE --> NOTIFY[notify<br/>Уведомление о завершении]
+    REPORT_FAILED --> ANALYZE[analyze_vulnerabilities<br/>Сканирует DAG → находит уязвимости → JSON]
+
+    ANALYZE --> NOTIFY[notify<br/>echo "DAG завершен"]
 
     NOTIFY --> END([End])
 
-    SUCCESS[on_success_callback<br/>📈 Задание 2<br/>Мониторинг успешных запусков] -.->|При успехе DAG| DOWNLOAD_JSON
-    
-    FAILURE[on_failure_callback<br/>📈 Задание 2<br/>Логирование ошибок DAG] -.->|При ошибке DAG| DOWNLOAD_JSON
+    DOWNLOAD_JSON --> SUCCESS[on_success_callback<br/>Анализирует запуски → JSON]
+    DOWNLOAD_JSON --> FAILURE[on_failure_callback<br/>Сохраняет ошибку → JSON]
 
-    style REPORT fill:#ffe6cc,stroke:#d79b00
+    style REPORT_FAILED fill:#ffe6cc,stroke:#d79b00
     style ANALYZE fill:#f8cecc,stroke:#b85450
     style SUCCESS fill:#e1d5e7,stroke:#9673a6
     style FAILURE fill:#e1d5e7,stroke:#9673a6
-    style DOWNLOAD_IMAGES fill:#fff3e0,stroke:#f57c00
 ```
