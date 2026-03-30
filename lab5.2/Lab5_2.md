@@ -36,7 +36,7 @@ flowchart LR
     end
 
     API -->|1. Получение данных о запусках| Airflow
-    Airflow -->|2. Сохранение JSON и изображений| Data
+    Airflow -->|2. Сохранение JSON и фото| Data
     Airflow -.->|3. Запись логов| Logs
     Dags -.->|4. Чтение DAG файла| Airflow
     Data -->|5. Передача изображений| Jupyter
