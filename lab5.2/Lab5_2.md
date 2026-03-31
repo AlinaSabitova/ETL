@@ -78,10 +78,7 @@ flowchart LR
 - Сохраняет предсказания в `ml_predictions.csv`.
 
 #### Streamlit (Аналитический контур)
-- Визуализирует отчеты:
-  - **Задание 1** — `failed_images_report.json`
-  - **Задание 2** — `launch_monitoring_*.json`, `dag_failure_*.json`
-  - **Задание 3** — `vulnerability_analysis_*.json`
+- Визуализирует отчеты.
 - Отображает галерею фото с тегами и графики.
 
 # Технический стек
