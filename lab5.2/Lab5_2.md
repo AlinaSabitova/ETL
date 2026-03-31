@@ -85,7 +85,7 @@ flowchart LR
 
 - **Оркестрация**: Apache Airflow 2.8.1
 - **Контейнеризация**: Docker, Docker Compose
-- **Язык программирования**: Python 3.11
+- **Язык программирования**: Python 3.11-slim
 - **Библиотеки (ETL & ML)**: Pandas, Scikit-learn, Joblib, Requests, Torch, Transformers, Pillow
 - **Визуализация**: Streamlit, Plotly, Matplotlib
 - **База данных**: PostgreSQL 12 (для метаданных Airflow)
