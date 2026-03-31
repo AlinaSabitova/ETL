@@ -48,6 +48,9 @@
 
 [Отчет](/lab5.1/Lab5_1.md)
 
+# Лабораторная №5.2
+
+[Отчет](/lab5.2/Lab5_2.md)
 [Архитектура](/lab5.1/images/arhitecture_lab5.1_etl.drawio.png)
 
 [Ноутбук](/lab5.1/business_case_umbrella/прогноз_продаж.ipynb)
