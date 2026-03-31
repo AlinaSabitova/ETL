@@ -103,7 +103,7 @@ graph TD
 
     DOWNLOAD_JSON --> DOWNLOAD_IMAGES[download_pictures<br/>Скачивание фото]
 
-    DOWNLOAD_IMAGES --> REPORT_FAILED[report_failed_images<br/>Отчет о неудачных фото]
+    DOWNLOAD_IMAGES --> REPORT_FAILED[report_failed_images<br/>Отчет о неудачных скачиваниях фото]
 
     REPORT_FAILED --> ANALYZE[analyze_vulnerabilities<br/>Поиск уязвимостей в коде]
 
